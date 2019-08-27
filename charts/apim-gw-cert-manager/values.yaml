@@ -16,6 +16,6 @@ acmeEmail: # set email address here
 
 # Google Cloud DNS details for ClusterIssuer ACME DNS01 validation
 clouddnsServiceAccountSecretRefName: clouddns
-clouddnsServiceAccountSecretRefKey: clouddns.key.json
-clouddnsProject: api-management-178215
+clouddnsServiceAccountSecretRefKey: clouddns1.key.json
+clouddnsProject: demos-esd-security-masingale
 clouddnsServiceAccountKeyFile: # set this key with --set-file

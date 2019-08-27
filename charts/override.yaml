@@ -15,7 +15,7 @@ apim-gw-cicd: &nexusDockerHost "docker.layer7.broadcom.com"               # Nexu
 apim-gw-cicd: &nexusHttpHost "nexus.layer7.broadcom.com"                  # Nexus hostname assigned
 apim-gw-cicd: &nexusIp "your-first-cluster-1-nexus-ip"                          # Nexus IP assigned
 apim-gw-cicd: &jenkinsAdminPassword "7layer"                  # Define admin password for Jenkins
-apim-gw-cicd: &nexusAdminPassword "7layer"                      # Define admin password for Nexus
+apim-gw-cicd: &nexusAdminPassword "admin123"                      # Define admin password for Nexus
 apim-gw-cicd: &jenkinsHostName "jenkins.layer7.broadcom.com"              # Jenkins hostname assigned
 apim-gw-cicd: &jenkinsIp "your-first-cluster-1-jenkins-ip"                      # Jenkins IP assigned
 apim-gw-cicd: null
