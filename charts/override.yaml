@@ -13,20 +13,20 @@ apim-gw-cert-manager: null
 
 apim-gw-cicd: &nexusDockerHost "docker.layer7.broadcom.com"               # Nexus docker repo hostname assigned
 apim-gw-cicd: &nexusHttpHost "nexus.layer7.broadcom.com"                  # Nexus hostname assigned
-apim-gw-cicd: &nexusIp "your-first-cluster-1-nexus-ip"                          # Nexus IP assigned
+apim-gw-cicd: &nexusIp "your-first-cluster-3-nexus-ip"                          # Nexus IP assigned
 apim-gw-cicd: &jenkinsAdminPassword "7layer"                  # Define admin password for Jenkins
 apim-gw-cicd: &nexusAdminPassword "admin123"                      # Define admin password for Nexus
 apim-gw-cicd: &jenkinsHostName "jenkins.layer7.broadcom.com"              # Jenkins hostname assigned
-apim-gw-cicd: &jenkinsIp "your-first-cluster-1-jenkins-ip"                      # Jenkins IP assigned
+apim-gw-cicd: &jenkinsIp "your-first-cluster-3-jenkins-ip"                      # Jenkins IP assigned
 apim-gw-cicd: null
 
 apim-service-metrics-runtime: &grafanaAdminPassword "7layer"  # Define admin password for grafana
 apim-service-metrics-runtime: &grafanaHost "grafana.layer7.broadcom.com"  # Grafana hostname assigned
-apim-service-metrics-runtime: &grafanaIP "your-first-cluster-1-grafana-ip"      # Grafana IP assigned
+apim-service-metrics-runtime: &grafanaIP "your-first-cluster-3-grafana-ip"      # Grafana IP assigned
 apim-service-metrics-runtime: null
 
 apim-logs-runtime: &kibanaHost "kibana.layer7.broadcom.com/*"             # Kibana hostname assigned
-apim-logs-runtime: &kibanaIp "your-first-cluster-1-kibana-ip"                   # Kibana IP assigned
+apim-logs-runtime: &kibanaIp "your-first-cluster-3-kibana-ip"                   # Kibana IP assigned
 apim-logs-runtime: null
 
 
