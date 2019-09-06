@@ -30,11 +30,11 @@ spec:
           args:
             - echo "Post-install job starting ......";
               ADMIN_PASS_OLD="admin123";
-              CMD_GET_DOCKER_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/createDockerRepository";
-              CMD_GET_ADMIN_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/changeAdminPassword";
-              CMD_CHECK_DOCKER_REPO="curl -k -s --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/repositories";
-              CMD_DELETE_REPO_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XDELETE https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/createDockerRepository";
-              CMD_DELETE_ADMIN_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:{{ .Values.nexusAdminPassword }} -XDELETE https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/changeAdminPassword";
+              CMD_GET_DOCKER_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/createDockerRepository";
+              CMD_GET_ADMIN_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/changeAdminPassword";
+              CMD_CHECK_DOCKER_REPO="curl -k -s --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/repositories";
+              CMD_DELETE_REPO_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XDELETE http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/createDockerRepository";
+              CMD_DELETE_ADMIN_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:{{ .Values.nexusAdminPassword }} -XDELETE http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/changeAdminPassword";
               HTTP_CODE_GET=0;
               HTTP_CODE_ADD=0;
               HTTP_CODE_RUN=0;
@@ -42,6 +42,8 @@ spec:
               NEXUS_READY=0;
               Retries=0;
               while [[ $Retries -lt 120 ]];
+                  echo "Sleeping for 10 minutes .......";
+                  sleep 600;
                   do HTTP_CODE_GET=$($CMD_GET_DOCKER_SCRIPT);
                   [[ $HTTP_CODE_GET == "200" ]] || [[ $HTTP_CODE_GET == "404" ]] && NEXUS_READY=1 && break;
                   echo "Waiting for nexus ingress to be ready ......";
@@ -58,7 +60,7 @@ spec:
                   then
                       Retries=0;
                       while [[ $Retries -lt 15 ]];
-                          do HTTP_CODE_ADD="$(curl -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:application/json' -u admin:$ADMIN_PASS_OLD -XPOST https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script --data '{"name":"createDockerRepository","content":"import org.sonatype.nexus.blobstore.api.BlobStoreManager;import org.sonatype.nexus.repository.storage.WritePolicy;repository.createDockerHosted('"'"'docker-hosted'"'"',5003,null,BlobStoreManager.DEFAULT_BLOBSTORE_NAME,false,true,WritePolicy.ALLOW)","type":"groovy"}')";
+                          do HTTP_CODE_ADD="$(curl -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:application/json' -u admin:$ADMIN_PASS_OLD -XPOST http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script --data '{"name":"createDockerRepository","content":"import org.sonatype.nexus.blobstore.api.BlobStoreManager;import org.sonatype.nexus.repository.storage.WritePolicy;repository.createDockerHosted('"'"'docker-hosted'"'"',5003,null,BlobStoreManager.DEFAULT_BLOBSTORE_NAME,false,true,WritePolicy.ALLOW)","type":"groovy"}')";
                           [[ $HTTP_CODE_ADD == "204" ]] && break;
                           sleep 5;
                           Retries=$( expr $Retries + 1 );
@@ -77,7 +79,7 @@ spec:
                   then
                       Retries=0;
                       while [[ $Retries -lt 5 ]];
-                          do HTTP_CODE_RUN="$(curl -k -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:text/plain' --header 'Content-Length:0' -u admin:$ADMIN_PASS_OLD -XPOST https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/createDockerRepository/run)";
+                          do HTTP_CODE_RUN="$(curl -k -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:text/plain' --header 'Content-Length:0' -u admin:$ADMIN_PASS_OLD -XPOST http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/createDockerRepository/run)";
                           [[ $HTTP_CODE_RUN == "200" ]] && break;
                           sleep 5;
                           Retries=$( expr $Retries + 1 );
@@ -110,7 +112,7 @@ spec:
                   then
                       Retries=0;
                       while [[ $Retries -lt 5 ]];
-                          do HTTP_CODE_ADD="$(curl -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:application/json' -u admin:$ADMIN_PASS_OLD -XPOST https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script --data '{"name":"changeAdminPassword","content":"security.securitySystem.changePassword('"'"'admin'"'"','"'"'{{ .Values.nexusAdminPassword }}'"'"')","type":"groovy"}')";
+                          do HTTP_CODE_ADD="$(curl -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:application/json' -u admin:$ADMIN_PASS_OLD -XPOST http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script --data '{"name":"changeAdminPassword","content":"security.securitySystem.changePassword('"'"'admin'"'"','"'"'{{ .Values.nexusAdminPassword }}'"'"')","type":"groovy"}')";
                           [[ $HTTP_CODE_ADD == "204" ]] && break;
                           sleep 5;
                           Retries=$( expr $Retries + 1 );
@@ -126,7 +128,7 @@ spec:
                   then
                       Retries=0;
                       while [[ $Retries -lt 5 ]];
-                          do HTTP_CODE_RUN="$(curl -k -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:text/plain' --header 'Content-Length:0' -u admin:$ADMIN_PASS_OLD -XPOST https://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:443/service/rest/v1/script/changeAdminPassword/run)";
+                          do HTTP_CODE_RUN="$(curl -k -s -o /dev/null -w ''%{http_code}'' --max-time 5 --header 'Content-Type:text/plain' --header 'Content-Length:0' -u admin:$ADMIN_PASS_OLD -XPOST http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/changeAdminPassword/run)";
                           [[ $HTTP_CODE_RUN == "200" ]] && break;
                           sleep 5;
                           Retries=$( expr $Retries + 1 );

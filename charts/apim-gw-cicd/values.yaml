@@ -16,7 +16,7 @@ sonatype-nexus:
     tls:
       enabled: true
       secretName: tls
-
+    
 jenkins:
 
   Master:
