@@ -29,8 +29,8 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - echo "Post-install job starting ......";
-              echo "Sleeping for 10 minutes before checking to see if Nexus is Up and Running .......";
-              sleep 600;
+              #echo "Sleeping for 10 minutes before checking to see if Nexus is Up and Running .......";
+              #sleep 600;
               ADMIN_PASS_OLD="admin123";
               CMD_GET_DOCKER_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/createDockerRepository";
               CMD_GET_ADMIN_SCRIPT="curl -k -s -o /dev/null -w %{http_code} --max-time 5 -u admin:$ADMIN_PASS_OLD -XGET http://{{ index .Values "sonatype-nexus" "nexusProxy" "env" "nexusHttpHost" }}:80/service/rest/v1/script/changeAdminPassword";
